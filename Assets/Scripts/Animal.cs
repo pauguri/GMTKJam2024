@@ -1,17 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Animal : HexGridObject
 {
-    void Start()
-    {
-        SetPosition(0, 0);
-    }
-
-    void Update()
-    {
-
-    }
+    private Coroutine moveCoroutine;
 
     public void CalculateNextMove(Board board)
     {
@@ -47,7 +41,8 @@ public class Animal : HexGridObject
                 {
                     currentCell.occupied = false;
                     bestCells[0].occupied = true;
-                    HopTo(bestCells[0].Position);
+
+                    MoveTo(bestCells[0].Position);
                 }
                 else if (bestCells.Count > 1)
                 {
@@ -56,16 +51,38 @@ public class Animal : HexGridObject
 
                     currentCell.occupied = false;
                     bestCells[index].occupied = true;
-                    HopTo(bestCells[index].Position);
+
+                    MoveTo(bestCells[index].Position);
                 }
             }
             else
             {
                 if (currentCell.distanceToEdge == 1)
                 {
-                    // we are on the edge, ESCAPE
-                    print("Escaped!");
-                    GameManager.Instance.Start2DPhase();
+                    // find neighbor that doesn't exist in the board
+                    List<Vector2Int> unoccupiedDirections = new List<Vector2Int>();
+                    foreach (Vector2Int direction in Board.GetDirections(currentCell))
+                    {
+                        if (!board.cells.ContainsKey(currentCell.Position + direction))
+                        {
+                            unoccupiedDirections.Add(direction);
+                        }
+                    }
+
+                    if (unoccupiedDirections.Count > 0)
+                    {
+                        Vector2Int direction = unoccupiedDirections[Random.Range(0, unoccupiedDirections.Count)];
+                        currentCell.occupied = false;
+
+                        MoveTo(currentCell.Position + direction);
+                    }
+                    else
+                    {
+                        Debug.LogError("Somehow there are no unoccupied directions wat");
+                    }
+
+
+                    board.ResetBoard();
                 }
                 else if (currentCell.distanceToEdge <= 0)
                 {
@@ -76,8 +93,27 @@ public class Animal : HexGridObject
         }
     }
 
-    public void HopTo(Vector2Int position)
+    public void MoveTo(Vector2Int to)
     {
-        SetPosition(position);
+        SetPosition(to);
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
+        }
+        moveCoroutine = StartCoroutine(MoveAnimation(to));
+    }
+
+    private IEnumerator MoveAnimation(Vector2Int to)
+    {
+        Vector2 fromPos = transform.anchoredPosition;
+        Vector2 toPos = HexToAnchored(to);
+        Vector2 movement = (toPos - fromPos) / 5;
+
+        for (int i = 0; i < 5; i++)
+        {
+            transform.anchoredPosition += movement;
+            yield return new WaitForSeconds(0.08f);
+        }
     }
 }

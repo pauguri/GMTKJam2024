@@ -1,21 +1,28 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Board : MonoBehaviour
 {
     public readonly Dictionary<Vector2Int, Cell> cells = new Dictionary<Vector2Int, Cell>();
+    [NonSerialized] public bool enableInput = true;
 
     [SerializeField] private Animal animal;
 
     void Start()
     {
-        PrepareBoard();
-    }
+        // hide cell rows and animal
+        foreach (CanvasGroup row in GetComponentsInChildren<CanvasGroup>())
+        {
+            row.alpha = 0;
+        }
+        animal.gameObject.SetActive(false);
+        enableInput = false;
 
-    private void PrepareBoard()
-    {
         Cell[] cellObjects = GetComponentsInChildren<Cell>();
-
         // populate the dictionary with the cells
         foreach (Cell cell in cellObjects)
         {
@@ -23,16 +30,25 @@ public class Board : MonoBehaviour
             cell.board = this;
         }
 
+        PrepareBoard();
+        StartCoroutine(AnimateInBoard(1f, () => enableInput = true));
+    }
+
+    private void PrepareBoard()
+    {
+        // make 0,0 cell occupied
+        cells[new Vector2Int(0, 0)].occupied = true;
+
         // select random cells to block
         for (int i = 0; i < 15; i++)
         {
             Cell cell;
             do
             {
-                int index = Random.Range(0, cellObjects.Length);
-                cell = cellObjects[index];
+                int index = Random.Range(0, cells.Values.Count);
+                cell = cells.Values.ElementAt(index);
             } while (cell.blocked || (cell.x == 0 && cell.y == 0));
-            cell.SetBlocked(true);
+            cell.SetBlocked(true, false);
             GameManager.Instance.blockedCells.Add(cell.Position);
         }
     }
@@ -91,6 +107,61 @@ public class Board : MonoBehaviour
         } while (changed);
 
         animal.CalculateNextMove(this);
+    }
+
+    public void ResetBoard()
+    {
+        enableInput = false;
+
+        StartCoroutine(AnimateOutBoard(1f, () =>
+        {
+            foreach (Cell cell in cells.Values)
+            {
+                cell.SetBlocked(false, false);
+                cell.occupied = false;
+            }
+            PrepareBoard();
+            StartCoroutine(AnimateInBoard(1f, () => enableInput = true));
+        }));
+    }
+
+    private IEnumerator AnimateInBoard(float delay = 0f, Action callback = null)
+    {
+        yield return new WaitForSeconds(delay);
+
+        CanvasGroup[] rows = GetComponentsInChildren<CanvasGroup>();
+        int middleRow = Mathf.CeilToInt(rows.Length / 2);
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            rows[i].alpha = 1;
+
+            if (i == middleRow)
+            {
+                animal.gameObject.SetActive(true);
+                animal.SetPosition(0, 0);
+                animal.transform.anchoredPosition = HexGridObject.HexToAnchored(0, 0);
+            }
+
+            yield return new WaitForSeconds(0.08f);
+        }
+
+        callback?.Invoke();
+    }
+
+    private IEnumerator AnimateOutBoard(float delay = 0f, Action callback = null)
+    {
+        yield return new WaitForSeconds(delay);
+
+        animal.gameObject.SetActive(false);
+        foreach (CanvasGroup row in GetComponentsInChildren<CanvasGroup>())
+        {
+            row.alpha = 0;
+
+            yield return new WaitForSeconds(0.08f);
+        }
+
+        callback?.Invoke();
     }
 
     public Cell[] GetNeighbors(Cell cell)

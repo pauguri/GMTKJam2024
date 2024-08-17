@@ -1,5 +1,5 @@
 using System;
-using TMPro;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,28 +7,27 @@ using UnityEngine.UI;
 public class Cell : HexGridObject, IPointerClickHandler
 {
     [NonSerialized] public Board board;
-    [NonSerialized] public bool blocked = false;
+    public bool blocked { get; private set; }
     [NonSerialized] public bool occupied = false;
+
+    private Image image;
+    private Color normalColor;
+    [SerializeField] private Color blockedColor = Color.red;
+    [SerializeField] private GameObject telegraphImage;
 
     [NonSerialized] public int distanceToEdge = 0;
     //[NonSerialized] public int possibleRoutes;
     //public float Score => distanceToEdge > 0 ? possibleRoutes / distanceToEdge : -1;
     // public float Score => distanceToEdge > 0 ? 1f / distanceToEdge : -1;
 
-    private TextMeshProUGUI debugText;
-
     public override void Awake()
     {
         base.Awake();
 
-        // debugText = GetComponentInChildren<TextMeshProUGUI>();
-        x = Mathf.CeilToInt(transform.anchoredPosition.x / 100);
-        y = Mathf.CeilToInt(transform.parent.GetComponent<RectTransform>().anchoredPosition.y / 85);
-    }
+        SetPosition(AnchoredToHex(transform.anchoredPosition.x, transform.parent.GetComponent<RectTransform>().anchoredPosition.y));
 
-    private void Update()
-    {
-        // debugText.text = "b " + blocked + "\no " + occupied;
+        image = GetComponent<Image>();
+        normalColor = image.color;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -39,7 +38,7 @@ public class Cell : HexGridObject, IPointerClickHandler
         //    print("Clicked on cell " + gameObject.name);
         //}
 
-        if (!blocked && !occupied)
+        if (board.enableInput && !blocked && !occupied)
         {
             SetBlocked(true);
 
@@ -48,12 +47,41 @@ public class Cell : HexGridObject, IPointerClickHandler
         }
     }
 
-    public void SetBlocked(bool state)
+    public void SetBlocked(bool state, bool animate = true)
     {
         blocked = state;
-
-        Image image = GetComponent<Image>();
-        image.color = state ? Color.red : Color.white;
         image.raycastTarget = !state;
+
+        if (blocked)
+        {
+            if (animate)
+            {
+                StartCoroutine(BlockedAnimation());
+            }
+            else
+            {
+                image.color = blockedColor;
+            }
+        }
+        else
+        {
+            image.color = normalColor;
+        }
+    }
+
+    public IEnumerator BlockedAnimation()
+    {
+        //board.enableInput = false;
+
+        for (int i = 0; i < 2; i++)
+        {
+            telegraphImage.SetActive(true);
+            yield return new WaitForSeconds(0.08f);
+            telegraphImage.SetActive(false);
+            yield return new WaitForSeconds(0.08f);
+        }
+        image.color = blockedColor;
+
+        //board.enableInput = true;
     }
 }
