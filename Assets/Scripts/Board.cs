@@ -33,6 +33,7 @@ public class Board : MonoBehaviour
                 cell = cellObjects[index];
             } while (cell.blocked || (cell.x == 0 && cell.y == 0));
             cell.SetBlocked(true);
+            GameManager.Instance.blockedCells.Add(cell.Position);
         }
     }
 

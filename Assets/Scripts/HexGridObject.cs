@@ -18,7 +18,7 @@ public class HexGridObject : MonoBehaviour
     {
         this.x = x;
         this.y = y;
-        transform.anchoredPosition = new Vector2(x * 100 + (y % 2 == 0 ? 25 : -25), y * 80);
+        transform.anchoredPosition = new Vector2(x * 100 + (y % 2 == 0 ? 25 : -25), y * 85);
     }
 
     public void SetPosition(Vector2Int position)

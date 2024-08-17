@@ -21,20 +21,14 @@ public class Cell : HexGridObject, IPointerClickHandler
     {
         base.Awake();
 
-        debugText = GetComponentInChildren<TextMeshProUGUI>();
-        //debugText.text = x + ", " + y;
-    }
-
-    void Start()
-    {
+        // debugText = GetComponentInChildren<TextMeshProUGUI>();
         x = Mathf.CeilToInt(transform.anchoredPosition.x / 100);
-        y = Mathf.CeilToInt(transform.parent.GetComponent<RectTransform>().anchoredPosition.y / 80);
-
+        y = Mathf.CeilToInt(transform.parent.GetComponent<RectTransform>().anchoredPosition.y / 85);
     }
 
     private void Update()
     {
-        debugText.text = "b " + blocked + "\no " + occupied;
+        // debugText.text = "b " + blocked + "\no " + occupied;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -47,7 +41,6 @@ public class Cell : HexGridObject, IPointerClickHandler
 
         if (!blocked && !occupied)
         {
-            print("Clicked on cell " + gameObject.name + " distance " + distanceToEdge);
             SetBlocked(true);
 
             GameManager.Instance.clickedCells.Add(Position);

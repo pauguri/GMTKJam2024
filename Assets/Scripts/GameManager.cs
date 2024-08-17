@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public List<Vector2Int> clickedCells = new List<Vector2Int>();
+    [NonSerialized] public List<Vector2Int> blockedCells = new List<Vector2Int>();
+    [NonSerialized] public List<Vector2Int> clickedCells = new List<Vector2Int>();
 
     private void Awake()
     {
@@ -18,5 +21,17 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void Start2DPhase()
+    {
+        SceneManager.LoadScene("2DScene");
+        blockedCells.Clear();
+        clickedCells.Clear();
+    }
+
+    public void Start3DPhase()
+    {
+        SceneManager.LoadScene("3DScene");
     }
 }

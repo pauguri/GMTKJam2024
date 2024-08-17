@@ -65,10 +65,12 @@ public class Animal : HexGridObject
                 {
                     // we are on the edge, ESCAPE
                     print("Escaped!");
+                    GameManager.Instance.Start2DPhase();
                 }
                 else if (currentCell.distanceToEdge <= 0)
                 {
                     print("Trapped!");
+                    GameManager.Instance.Start3DPhase();
                 }
             }
         }
