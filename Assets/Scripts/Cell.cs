@@ -1,28 +1,40 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Cell : MonoBehaviour, IPointerClickHandler
+public class Cell : HexGridObject, IPointerClickHandler
 {
-    private new RectTransform transform;
-
-    [NonSerialized] public int x;
-    [NonSerialized] public int y;
-
     [NonSerialized] public Board board;
     [NonSerialized] public bool blocked = false;
+    [NonSerialized] public bool occupied = false;
 
     [NonSerialized] public int distanceToEdge = 0;
-    [NonSerialized] public int possibleRoutes;
-    [NonSerialized] public float score;
+    //[NonSerialized] public int possibleRoutes;
+    //public float Score => distanceToEdge > 0 ? possibleRoutes / distanceToEdge : -1;
+    // public float Score => distanceToEdge > 0 ? 1f / distanceToEdge : -1;
 
-    void Awake()
+    private TextMeshProUGUI debugText;
+
+    public override void Awake()
     {
-        transform = GetComponent<RectTransform>();
+        base.Awake();
 
-        x = Mathf.CeilToInt(transform.anchoredPosition.x / transform.rect.width);
-        y = Mathf.CeilToInt(transform.parent.GetComponent<RectTransform>().anchoredPosition.y / (transform.rect.height * 0.8f));
+        debugText = GetComponentInChildren<TextMeshProUGUI>();
+        //debugText.text = x + ", " + y;
+    }
+
+    void Start()
+    {
+        x = Mathf.CeilToInt(transform.anchoredPosition.x / 100);
+        y = Mathf.CeilToInt(transform.parent.GetComponent<RectTransform>().anchoredPosition.y / 80);
+
+    }
+
+    private void Update()
+    {
+        debugText.text = "b " + blocked + "\no " + occupied;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -33,9 +45,13 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         //    print("Clicked on cell " + gameObject.name);
         //}
 
-        if (!blocked)
+        if (!blocked && !occupied)
         {
-            print("Clicked on cell " + gameObject.name);
+            print("Clicked on cell " + gameObject.name + " distance " + distanceToEdge);
+            SetBlocked(true);
+
+            GameManager.Instance.clickedCells.Add(Position);
+            board.CalculatePathfinding();
         }
     }
 

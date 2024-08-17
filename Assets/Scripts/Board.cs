@@ -3,16 +3,13 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    private readonly Dictionary<Vector2Int, Cell> cells = new Dictionary<Vector2Int, Cell>();
+    public readonly Dictionary<Vector2Int, Cell> cells = new Dictionary<Vector2Int, Cell>();
+
+    [SerializeField] private Animal animal;
 
     void Start()
     {
         PrepareBoard();
-    }
-
-    void Update()
-    {
-
     }
 
     private void PrepareBoard()
@@ -26,8 +23,8 @@ public class Board : MonoBehaviour
             cell.board = this;
         }
 
-        // select 5 random cells to block
-        for (int i = 0; i < 5; i++)
+        // select random cells to block
+        for (int i = 0; i < 15; i++)
         {
             Cell cell;
             do
@@ -37,40 +34,105 @@ public class Board : MonoBehaviour
             } while (cell.blocked || (cell.x == 0 && cell.y == 0));
             cell.SetBlocked(true);
         }
+    }
 
+    public void CalculatePathfinding()
+    {
         // assign distance 1 to cells on the edge
-        foreach (Cell cell in cellObjects)
+        foreach (Cell cell in cells.Values)
         {
-            if (Mathf.Abs(cell.x) == 5 || Mathf.Abs(cell.y) == 5)
+            if (!cell.blocked && (Mathf.Abs(cell.x) == 5 || Mathf.Abs(cell.y) == 5))
             {
                 cell.distanceToEdge = 1;
+                //cell.possibleRoutes = 2;
+            }
+            else
+            {
+                cell.distanceToEdge = 0;
+                //cell.possibleRoutes = 0;
             }
         }
 
         // assign increasing distance to the rest of the cells
-        //bool changed = false;
-        //do
-        //{
-        //    changed = false;
-        //    foreach (Cell cell in cellObjects)
-        //    {
-        //        if (cell.distanceToEdge == 0)
-        //        {
-        //            int minDistance = 6;
-        //            foreach (Cell neighbor in GetNeighbors(cell))
-        //            {
-        //                if (neighbor.distanceToEdge < minDistance)
-        //                {
-        //                    minDistance = neighbor.distanceToEdge;
-        //                }
-        //            }
-        //            if (minDistance < 6)
-        //            {
-        //                cell.distanceToEdge = minDistance + 1;
-        //                changed = true;
-        //            }
-        //        }
-        //    }
-        //} while (changed);
+        bool changed = false;
+        int iterations = 0;
+        do
+        {
+            changed = false;
+            iterations++;
+
+            foreach (Cell cell in cells.Values)
+            {
+                if (cell.distanceToEdge == 0 && !cell.blocked)
+                {
+                    //int accPossibleRoutes = 0;
+                    foreach (Cell neighbor in GetNeighbors(cell))
+                    {
+                        if (!neighbor.blocked && neighbor.distanceToEdge == iterations)
+                        {
+                            // print("cell " + cell.x + ", " + cell.y + " neighbor " + neighbor.x + ", " + neighbor.y + " has number " + neighbor.distanceToEdge);
+                            cell.distanceToEdge = iterations + 1;
+                            changed = true;
+                            break;
+
+                            //accPossibleRoutes += neighbor.possibleRoutes;
+                        }
+                    }
+
+                    //if (accPossibleRoutes > 0)
+                    //{
+                    //cell.distanceToEdge = iterations + 1;
+                    //cell.possibleRoutes = accPossibleRoutes;
+                    //changed = true;
+                    //}
+                }
+            }
+        } while (changed);
+
+        animal.CalculateNextMove(this);
     }
+
+    public Cell[] GetNeighbors(Cell cell)
+    {
+        List<Cell> neighbors = new List<Cell>();
+        foreach (Vector2Int direction in GetDirections(cell))
+        {
+            Vector2Int position = new Vector2Int(cell.x + direction.x, cell.y + direction.y);
+            if (cells.ContainsKey(position))
+            {
+                neighbors.Add(cells[position]);
+            }
+        }
+
+        return neighbors.ToArray();
+    }
+
+    public static Vector2Int[] GetDirections(Cell cell)
+    {
+        if (cell.y % 2 == 0)
+        {
+            return new Vector2Int[]
+            {
+                new Vector2Int(-1, 0),
+                new Vector2Int(0, 1),
+                new Vector2Int(1, 1),
+                new Vector2Int(1, 0),
+                new Vector2Int(1, -1),
+                new Vector2Int(0, -1)
+            };
+        }
+        else
+        {
+            return new Vector2Int[]
+            {
+                new Vector2Int(-1, 0),
+                new Vector2Int(-1, 1),
+                new Vector2Int(0, 1),
+                new Vector2Int(1, 0),
+                new Vector2Int(0, -1),
+                new Vector2Int(-1, -1)
+            };
+        }
+    }
+
 }
