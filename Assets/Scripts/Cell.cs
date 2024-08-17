@@ -76,11 +76,13 @@ public class Cell : HexGridObject, IPointerClickHandler
         for (int i = 0; i < 2; i++)
         {
             telegraphImage.SetActive(true);
+            SoundManager.Instance.PlayBeep(1);
             yield return new WaitForSeconds(0.08f);
             telegraphImage.SetActive(false);
             yield return new WaitForSeconds(0.08f);
         }
         image.color = blockedColor;
+        SoundManager.Instance.PlayBeep(3);
 
         //board.enableInput = true;
     }
