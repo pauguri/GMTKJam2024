@@ -13,11 +13,12 @@ public class PillarGenerator : MonoBehaviour
         if (GameManager.Instance == null || GameManager.Instance.clickedCells.Count == 0)
         {
             Debug.LogError("No cells clicked");
-            return;
+            //return;
         }
 
         // generate initially blocked cells
-        Vector2Int[] blockedCells = GameManager.Instance.blockedCells.ToArray();
+        // Vector2Int[] blockedCells = GameManager.Instance.blockedCells.ToArray();
+        Vector2Int[] blockedCells = new Vector2Int[] { new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(-2, 0), new Vector2Int(-3, 0), new Vector2Int(-4, 0) };
         if (blockedCells.Length > 0)
         {
             foreach (Vector2Int position in blockedCells)
@@ -26,7 +27,8 @@ public class PillarGenerator : MonoBehaviour
             }
         }
 
-        positions = GameManager.Instance.clickedCells.ToArray();
+        // positions = GameManager.Instance.clickedCells.ToArray();
+        positions = new Vector2Int[] { new Vector2Int(-1, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(3, 1), new Vector2Int(4, 1), new Vector2Int(5, 1), new Vector2Int(-2, 1), new Vector2Int(-3, 1), new Vector2Int(-4, 1) };
         StartCoroutine(GeneratePillars());
     }
 
@@ -46,6 +48,7 @@ public class PillarGenerator : MonoBehaviour
 
     private void GeneratePillar(Vector2Int position)
     {
-        Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 0, position.y * 85), Quaternion.identity);
+        GameObject pillar = Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 0, position.y * 85), Quaternion.identity);
+        pillar.transform.localScale = new Vector3(1, Random.Range(0.8f, 1.1f), 1);
     }
 }
