@@ -9,7 +9,12 @@ public class ThreeDSceneLogic : MonoBehaviour
     [SerializeField] private PillarGenerator pillarGenerator;
     [SerializeField] private GameObject deadOverlay;
     [SerializeField] private TextMeshProUGUI deadText;
+    [SerializeField] private PauseMenu pauseMenu;
     private bool isDead = false;
+
+    [SerializeField] private GameObject movementHint;
+    private Coroutine movementHintCoroutine;
+    private bool movementHintShown = false;
 
     public readonly Dictionary<Vector2Int, GroundCell> groundCells = new Dictionary<Vector2Int, GroundCell>();
 
@@ -35,8 +40,49 @@ public class ThreeDSceneLogic : MonoBehaviour
             groundCells.Add(new Vector2Int(cell.x, cell.y), cell);
         }
 
-        // TODO: wait until player moves to begin generating pillars
+        if (!movementHintShown)
+        {
+            movementHintCoroutine = StartCoroutine(ShowMovementHint());
+        }
+    }
+
+    private IEnumerator ShowMovementHint()
+    {
+        yield return new WaitForSeconds(5f);
+
+        movementHintShown = true;
+        movementHint.SetActive(true);
+    }
+
+    public void EndTutorialTime()
+    {
+        if (movementHintCoroutine != null)
+        {
+            StopCoroutine(movementHintCoroutine);
+        }
+        movementHint.SetActive(false);
+
         pillarGenerator.BeginPillarGeneration();
+    }
+
+    private void Update()
+    {
+        if (isDead)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                isDead = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                SoundManager.Instance.PlayBeep(0, false, 1, true);
+                GameManager.Instance.Start2DPhase();
+            }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                SoundManager.Instance.PlayBeep(0);
+                HideDeathScreen();
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -47,6 +93,7 @@ public class ThreeDSceneLogic : MonoBehaviour
 
             // handle player winning
             playerController.inputActive = false;
+            pauseMenu.canPause = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             SoundManager.Instance.PlayBeep(4);
@@ -63,8 +110,8 @@ public class ThreeDSceneLogic : MonoBehaviour
         isDead = true;
 
         deadText.text = "<color=#2861FF>you</color> got crushed";
-        StartCoroutine(DeathSequence());
         SoundManager.Instance.PlayBeep(5);
+        ShowDeathScreen();
     }
 
     public void HandleGetSurrounded()
@@ -76,31 +123,26 @@ public class ThreeDSceneLogic : MonoBehaviour
         isDead = true;
 
         deadText.text = "<color=#2861FF>you</color> got trapped";
-        StartCoroutine(DeathSequence());
         SoundManager.Instance.PlayLoseSound();
+        ShowDeathScreen();
     }
 
-    private IEnumerator DeathSequence()
+    private void ShowDeathScreen()
     {
         playerController.inputActive = false;
+        pauseMenu.canPause = false;
         deadOverlay.SetActive(true);
         pillarGenerator.ResetPillars();
+    }
 
-        //SoundManager.Instance.PlayBeep(4, true, 0.1f);
-
-        // GameObject portableBeep = Instantiate(SoundManager.Instance.portableBeepPrefab, playerController.transform.position, Quaternion.identity);
-        // PortableBeep beep = portableBeep.GetComponent<PortableBeep>();
-        // beep.PlayBeep(5);
-
-        yield return new WaitForSeconds(2f);
-
-        // Destroy(portableBeep);
-        SoundManager.Instance.PlayBeep(0);
+    private void HideDeathScreen()
+    {
         playerController.ResetPosition();
         playerController.inputActive = true;
-        deadOverlay.SetActive(false);
+        pauseMenu.canPause = true;
         pillarGenerator.BeginPillarGeneration();
         isDead = false;
+        deadOverlay.SetActive(false);
     }
 
     public void CheckPlayerTrapped()

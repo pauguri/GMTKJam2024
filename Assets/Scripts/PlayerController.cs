@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [NonSerialized] public bool inputActive = true;
     private Vector3 startPosition = Vector3.zero;
 
+    [NonSerialized] public bool hasLooked = false;
+    [NonSerialized] public bool hasMoved = false;
+
     private CharacterController controller;
 
     private void Awake()
@@ -35,12 +38,15 @@ public class PlayerController : MonoBehaviour
 
         // MOVEMENT
 
-        float x = Input.GetAxisRaw("Horizontal");
-        float z = Input.GetAxisRaw("Vertical");
+        if (hasLooked)
+        {
+            float x = Input.GetAxisRaw("Horizontal");
+            float z = Input.GetAxisRaw("Vertical");
 
-        Vector2 movement = new Vector2(x, z).normalized * movementSpeed * Time.deltaTime;
+            Vector2 movement = new Vector2(x, z).normalized * movementSpeed * Time.deltaTime;
 
-        controller.Move(transform.right * movement.x + transform.forward * movement.y);
+            controller.Move(transform.right * movement.x + transform.forward * movement.y);
+        }
 
         // ROTATION
 
@@ -52,7 +58,28 @@ public class PlayerController : MonoBehaviour
         cam.transform.localEulerAngles = Vector3.right * verticalRotation;
 
         transform.Rotate(Vector3.up * mouseX);
+
+        // FIRST TIME CHECKS
+
+        if (!hasLooked)
+        {
+            if (mouseX != 0 || mouseY != 0)
+            {
+                hasLooked = true;
+                print("looking done");
+            }
+        }
+        else if (!hasMoved && Vector3.Distance(startPosition, transform.position) > 15f)
+        {
+            hasMoved = true;
+            print("moving done");
+            if (hasLooked)
+            {
+                ThreeDSceneLogic.Instance.EndTutorialTime();
+            }
+        }
     }
+
 
     public void ResetPosition()
     {

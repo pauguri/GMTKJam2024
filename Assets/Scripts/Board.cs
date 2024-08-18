@@ -15,6 +15,7 @@ public class Board : MonoBehaviour
 
     [Space]
     [SerializeField] private ShaderEffect_CorruptedVram glitchEffect;
+    [SerializeField] private PauseMenu pauseMenu;
 
     void Start()
     {
@@ -25,6 +26,7 @@ public class Board : MonoBehaviour
         }
         animal.gameObject.SetActive(false);
         enableInput = false;
+        pauseMenu.canPause = false;
 
         Cell[] cellObjects = GetComponentsInChildren<Cell>();
         // populate the dictionary with the cells
@@ -35,7 +37,11 @@ public class Board : MonoBehaviour
         }
 
         PrepareBoard();
-        StartCoroutine(AnimateInBoard(1f, () => enableInput = true));
+        StartCoroutine(AnimateInBoard(1f, () =>
+        {
+            enableInput = true;
+            pauseMenu.canPause = true;
+        }));
     }
 
     private void PrepareBoard()
@@ -120,6 +126,7 @@ public class Board : MonoBehaviour
     public void ResetBoard()
     {
         enableInput = false;
+        pauseMenu.canPause = false;
 
         StartCoroutine(AnimateOutBoard(1f, () =>
         {
@@ -130,7 +137,11 @@ public class Board : MonoBehaviour
             }
             GameManager.Instance.round++;
             PrepareBoard();
-            StartCoroutine(AnimateInBoard(1f, () => enableInput = true));
+            StartCoroutine(AnimateInBoard(1f, () =>
+            {
+                enableInput = true;
+                pauseMenu.canPause = true;
+            }));
         }));
     }
 
@@ -177,6 +188,7 @@ public class Board : MonoBehaviour
     public void HandleWin()
     {
         enableInput = false;
+        pauseMenu.canPause = false;
 
         StartCoroutine(GlitchOutBoard(1f));
     }
