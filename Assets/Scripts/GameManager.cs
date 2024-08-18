@@ -28,12 +28,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // TODO: make it two clicks to quit
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
-        print("blockedCells: " + blockedCells.Count + " clickedCells: " + clickedCells.Count);
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    Application.Quit();
+        //}
     }
 
     public void Start2DPhase()
