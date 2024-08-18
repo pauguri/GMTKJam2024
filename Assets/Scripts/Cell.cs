@@ -16,9 +16,6 @@ public class Cell : HexGridObject, IPointerClickHandler
     [SerializeField] private GameObject telegraphImage;
 
     [NonSerialized] public int distanceToEdge = 0;
-    //[NonSerialized] public int possibleRoutes;
-    //public float Score => distanceToEdge > 0 ? possibleRoutes / distanceToEdge : -1;
-    // public float Score => distanceToEdge > 0 ? 1f / distanceToEdge : -1;
 
     public override void Awake()
     {

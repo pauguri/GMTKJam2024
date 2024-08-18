@@ -1,23 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class PillarGenerator : MonoBehaviour
 {
     private Vector2Int[] positions;
-    public readonly Dictionary<Vector2Int, GroundCell> groundCells = new Dictionary<Vector2Int, GroundCell>();
     [SerializeField] private GameObject pillarPrefab;
 
     // Start is called before the first frame update
     void Start()
     {
-        GroundCell[] groundCellObjects = FindObjectsOfType<GroundCell>();
-        foreach (GroundCell cell in groundCellObjects)
-        {
-            groundCells.Add(new Vector2Int(cell.x, cell.y), cell);
-        }
-
         PrepareBoard();
     }
 
@@ -71,6 +63,10 @@ public class PillarGenerator : MonoBehaviour
             StartCoroutine(GeneratePillar(position));
 
         } while (positions.Length > 0);
+
+        yield return new WaitForSeconds(3f);
+
+        ThreeDSceneLogic.Instance.CheckPlayerTrapped();
     }
 
     private IEnumerator GeneratePillar(Vector2Int position, bool animate = true)
@@ -82,9 +78,9 @@ public class PillarGenerator : MonoBehaviour
             pillarComponent.Init(animate);
         }
 
-        if (animate && groundCells.ContainsKey(position))
+        if (animate && ThreeDSceneLogic.Instance.groundCells.ContainsKey(position))
         {
-            GroundCell groundCell = groundCells[position];
+            GroundCell groundCell = ThreeDSceneLogic.Instance.groundCells[position];
             yield return groundCell.BlockedAnimation();
         }
 

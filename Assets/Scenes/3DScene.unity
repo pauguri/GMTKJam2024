@@ -1140,7 +1140,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.043137256, g: 0.050980393, b: 0.07450981, a: 1}
+  m_BackGroundColor: {r: 0.043137256, g: 0.050980393, b: 0.08627451, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1942,7 +1942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 963194227}
   mouseSensitivity: 2
-  movementSpeed: 50
+  movementSpeed: 20
 --- !u!143 &1949758635
 CharacterController:
   m_ObjectHideFlags: 0

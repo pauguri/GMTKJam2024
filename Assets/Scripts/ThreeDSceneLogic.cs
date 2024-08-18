@@ -1,12 +1,17 @@
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ThreeDSceneLogic : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PillarGenerator pillarGenerator;
-    [SerializeField] private GameObject crushedOverlay;
-    private bool isBeingCrushed = false;
+    [SerializeField] private GameObject deadOverlay;
+    [SerializeField] private TextMeshProUGUI deadText;
+    private bool isDead = false;
+
+    public readonly Dictionary<Vector2Int, GroundCell> groundCells = new Dictionary<Vector2Int, GroundCell>();
 
     public static ThreeDSceneLogic Instance;
 
@@ -24,6 +29,12 @@ public class ThreeDSceneLogic : MonoBehaviour
 
     private void Start()
     {
+        GroundCell[] groundCellObjects = FindObjectsOfType<GroundCell>();
+        foreach (GroundCell cell in groundCellObjects)
+        {
+            groundCells.Add(new Vector2Int(cell.x, cell.y), cell);
+        }
+
         // TODO: wait until player moves to begin generating pillars
         pillarGenerator.BeginPillarGeneration();
     }
@@ -43,20 +54,35 @@ public class ThreeDSceneLogic : MonoBehaviour
 
     public void HandleGetCrushed()
     {
-        if (isBeingCrushed)
+        if (isDead)
         {
             return;
         }
-        isBeingCrushed = true;
+        isDead = true;
 
-        StartCoroutine(CrushedSequence());
+        deadText.text = "you got crushed";
+        StartCoroutine(DeathSequence());
+        SoundManager.Instance.PlayBeep(5);
     }
-    private IEnumerator CrushedSequence()
+
+    public void HandleGetSurrounded()
+    {
+        if (isDead)
+        {
+            return;
+        }
+        isDead = true;
+
+        deadText.text = "you got surrounded";
+        StartCoroutine(DeathSequence());
+    }
+
+    private IEnumerator DeathSequence()
     {
         playerController.inputActive = false;
-        crushedOverlay.SetActive(true);
+        deadOverlay.SetActive(true);
         pillarGenerator.ResetPillars();
-        SoundManager.Instance.PlayBeep(5);
+
         //SoundManager.Instance.PlayBeep(4, true, 0.1f);
 
         // GameObject portableBeep = Instantiate(SoundManager.Instance.portableBeepPrefab, playerController.transform.position, Quaternion.identity);
@@ -69,8 +95,33 @@ public class ThreeDSceneLogic : MonoBehaviour
         SoundManager.Instance.PlayBeep(0, true, 0.4f);
         playerController.ResetPosition();
         playerController.inputActive = true;
-        crushedOverlay.SetActive(false);
+        deadOverlay.SetActive(false);
         pillarGenerator.BeginPillarGeneration();
-        isBeingCrushed = false;
+        isDead = false;
+    }
+
+    public void CheckPlayerTrapped()
+    {
+        // check what cell the player is closest to
+        Vector2Int closestPosition = Vector2Int.zero;
+        Vector3 closestWorldPos = Vector3.positiveInfinity;
+
+        foreach (GroundCell cell in groundCells.Values)
+        {
+            Vector2 cellAnchoredPos = HexGridObject.HexToAnchored(cell.Position);
+            Vector3 cellWorldPos = new Vector3(cellAnchoredPos.x, 0, cellAnchoredPos.y);
+
+            if (Vector3.Distance(cellWorldPos, playerController.transform.position) < Vector3.Distance(closestWorldPos, playerController.transform.position))
+            {
+                closestPosition = cell.Position;
+                closestWorldPos = cellWorldPos;
+            }
+        }
+
+        // check if the closest cell is surrounded
+        if (GameManager.Instance.surroundedCells.Contains(closestPosition))
+        {
+            HandleGetSurrounded();
+        }
     }
 }

@@ -12,7 +12,6 @@ public class Board : MonoBehaviour
 
     [SerializeField] private Animal animal;
     [SerializeField] private int[] blockedCells = new int[] { 10, 15, 20 };
-    private int round = 0;
 
     [Space]
     [SerializeField] private ShaderEffect_CorruptedVram glitchEffect;
@@ -41,11 +40,16 @@ public class Board : MonoBehaviour
 
     private void PrepareBoard()
     {
+        // clear GameManager lists
+        GameManager.Instance.blockedCells.Clear();
+        GameManager.Instance.clickedCells.Clear();
+        GameManager.Instance.surroundedCells.Clear();
+
         // make 0,0 cell occupied
         cells[new Vector2Int(0, 0)].occupied = true;
 
         // select random cells to block
-        int blockedCountIndex = Mathf.Min(round, blockedCells.Length - 1);
+        int blockedCountIndex = Mathf.Min(GameManager.Instance.round, blockedCells.Length - 1);
 
         for (int i = 0; i < blockedCells[blockedCountIndex]; i++)
         {
@@ -68,12 +72,10 @@ public class Board : MonoBehaviour
             if (!cell.blocked && (Mathf.Abs(cell.x) == 5 || Mathf.Abs(cell.y) == 5))
             {
                 cell.distanceToEdge = 1;
-                //cell.possibleRoutes = 2;
             }
             else
             {
                 cell.distanceToEdge = 0;
-                //cell.possibleRoutes = 0;
             }
         }
 
@@ -89,7 +91,6 @@ public class Board : MonoBehaviour
             {
                 if (cell.distanceToEdge == 0 && !cell.blocked)
                 {
-                    //int accPossibleRoutes = 0;
                     foreach (Cell neighbor in GetNeighbors(cell))
                     {
                         if (!neighbor.blocked && neighbor.distanceToEdge == iterations)
@@ -98,20 +99,20 @@ public class Board : MonoBehaviour
                             cell.distanceToEdge = iterations + 1;
                             changed = true;
                             break;
-
-                            //accPossibleRoutes += neighbor.possibleRoutes;
                         }
                     }
-
-                    //if (accPossibleRoutes > 0)
-                    //{
-                    //cell.distanceToEdge = iterations + 1;
-                    //cell.possibleRoutes = accPossibleRoutes;
-                    //changed = true;
-                    //}
                 }
             }
         } while (changed);
+
+        // find surrounded cells
+        foreach (Cell cell in cells.Values)
+        {
+            if (cell.distanceToEdge == 0 && !cell.blocked)
+            {
+                GameManager.Instance.surroundedCells.Add(cell.Position);
+            }
+        }
 
         animal.CalculateNextMove(this);
     }
@@ -127,7 +128,7 @@ public class Board : MonoBehaviour
                 cell.SetBlocked(false, false);
                 cell.occupied = false;
             }
-            round++;
+            GameManager.Instance.round++;
             PrepareBoard();
             StartCoroutine(AnimateInBoard(1f, () => enableInput = true));
         }));

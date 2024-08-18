@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     [NonSerialized] public List<Vector2Int> blockedCells = new List<Vector2Int>();
     [NonSerialized] public List<Vector2Int> clickedCells = new List<Vector2Int>();
+    [NonSerialized] public List<Vector2Int> surroundedCells = new List<Vector2Int>();
+    [NonSerialized] public int round = 0;
 
     private void Awake()
     {
@@ -30,13 +32,13 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+
+        print("blockedCells: " + blockedCells.Count + " clickedCells: " + clickedCells.Count);
     }
 
     public void Start2DPhase()
     {
         SceneManager.LoadScene("2DScene");
-        blockedCells.Clear();
-        clickedCells.Clear();
     }
 
     public void Start3DIntro()
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public void StartEnding()
     {
+        round = 0;
         SceneManager.LoadScene("EndingScene");
     }
 }
