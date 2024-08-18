@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -5,9 +6,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private float mouseSensitivity = 2f;
     public float movementSpeed = 5f;
-    private float verticalRotation = 0f;
+    private float verticalRotation = -70f;
+    [NonSerialized] public bool inputActive = true;
+    private Vector3 startPosition = Vector3.zero;
 
     private CharacterController controller;
+
+    private void Awake()
+    {
+        startPosition = transform.position;
+    }
 
     void Start()
     {
@@ -20,6 +28,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!inputActive)
+        {
+            return;
+        }
+
         // MOVEMENT
 
         float x = Input.GetAxisRaw("Horizontal");
@@ -39,5 +52,15 @@ public class PlayerController : MonoBehaviour
         cam.transform.localEulerAngles = Vector3.right * verticalRotation;
 
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    public void ResetPosition()
+    {
+        controller.enabled = false;
+        transform.position = startPosition;
+        verticalRotation = -70f;
+        cam.transform.localEulerAngles = Vector3.zero;
+
+        controller.enabled = true;
     }
 }

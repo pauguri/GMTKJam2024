@@ -185,6 +185,9 @@ public class Board : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         SoundManager.Instance.PlayBeep(4);
+
+        yield return new WaitForSeconds(2f);
+
         SoundManager.Instance.PlayGlitchSound();
 
         yield return new WaitForSeconds(1f);

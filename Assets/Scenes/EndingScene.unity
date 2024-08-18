@@ -149,7 +149,7 @@ RectTransform:
   m_GameObject: {fileID: 614718413}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 649644777}
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: don't let <color=#2861FF>it</color> escape
+  m_text: <color=#2861FF>You</color> escaped
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 75d5779e43f5a1044aa47bce9a5cbb77, type: 2}
   m_sharedMaterial: {fileID: -7593088321607733651, guid: 75d5779e43f5a1044aa47bce9a5cbb77, type: 2}
@@ -464,14 +464,29 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 811937694}
-  - component: {fileID: 811937695}
+  - component: {fileID: 811937693}
   m_Layer: 0
-  m_Name: MirroredIntroManager
+  m_Name: EndingManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &811937693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811937692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e429fe9d4c26449804f311d1dee911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title1: {fileID: 614718415}
+  title2: {fileID: 1519086113}
+  instructions: {fileID: 1952464085}
 --- !u!4 &811937694
 Transform:
   m_ObjectHideFlags: 0
@@ -487,21 +502,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &811937695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 811937692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 462cb2d0ad4c88d4f91f8e1d1971ca96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title1: {fileID: 614718415}
-  title2: {fileID: 1519086113}
-  instructions: {fileID: 1952464085}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,7 +796,7 @@ RectTransform:
   m_GameObject: {fileID: 1519086111}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 649644777}
@@ -826,7 +826,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: click to create a <color=#FF0053>wall</color>
+  m_text: thanks for playing
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 75d5779e43f5a1044aa47bce9a5cbb77, type: 2}
   m_sharedMaterial: {fileID: -7593088321607733651, guid: 75d5779e43f5a1044aa47bce9a5cbb77, type: 2}
@@ -903,62 +903,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519086111}
   m_CullTransparentMesh: 1
---- !u!1 &1572213790
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1572213792}
-  - component: {fileID: 1572213791}
-  m_Layer: 0
-  m_Name: Reverb
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!167 &1572213791
-AudioReverbZone:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1572213790}
-  m_Enabled: 1
-  m_MinDistance: 1000
-  m_MaxDistance: 2000
-  m_ReverbPreset: 27
-  m_Room: -1000
-  m_RoomHF: -400
-  m_DecayTime: 5
-  m_DecayHFRatio: 0.56
-  m_Reflections: -1713
-  m_ReflectionsDelay: 0.02
-  m_Reverb: -134
-  m_ReverbDelay: 0.03
-  m_HFReference: 5000
-  m_Diffusion: 100
-  m_Density: 100
-  m_LFReference: 250
-  m_RoomLF: 0
---- !u!4 &1572213792
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1572213790}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1952464083
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,7 +930,7 @@ RectTransform:
   m_GameObject: {fileID: 1952464083}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 649644777}
@@ -1016,7 +960,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: click to start
+  m_text: ESC to quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 75d5779e43f5a1044aa47bce9a5cbb77, type: 2}
   m_sharedMaterial: {fileID: -7593088321607733651, guid: 75d5779e43f5a1044aa47bce9a5cbb77, type: 2}
@@ -1102,4 +1046,3 @@ SceneRoots:
   - {fileID: 649644777}
   - {fileID: 995270520}
   - {fileID: 811937694}
-  - {fileID: 1572213792}

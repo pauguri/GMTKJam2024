@@ -23,6 +23,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        // TODO: make it two clicks to quit
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     public void Start2DPhase()
     {
         SceneManager.LoadScene("2DScene");
@@ -39,5 +48,10 @@ public class GameManager : MonoBehaviour
     public void Start3DPhase()
     {
         SceneManager.LoadScene("3DScene");
+    }
+
+    public void StartEnding()
+    {
+        SceneManager.LoadScene("EndingScene");
     }
 }
