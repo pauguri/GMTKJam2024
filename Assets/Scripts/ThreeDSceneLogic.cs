@@ -60,7 +60,7 @@ public class ThreeDSceneLogic : MonoBehaviour
         }
         isDead = true;
 
-        deadText.text = "you got crushed";
+        deadText.text = "<color=#2861FF>you</color> got crushed";
         StartCoroutine(DeathSequence());
         SoundManager.Instance.PlayBeep(5);
     }
@@ -73,8 +73,9 @@ public class ThreeDSceneLogic : MonoBehaviour
         }
         isDead = true;
 
-        deadText.text = "you got surrounded";
+        deadText.text = "<color=#2861FF>you</color> got trapped";
         StartCoroutine(DeathSequence());
+        SoundManager.Instance.PlayLoseSound();
     }
 
     private IEnumerator DeathSequence()
@@ -92,7 +93,7 @@ public class ThreeDSceneLogic : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         // Destroy(portableBeep);
-        SoundManager.Instance.PlayBeep(0, true, 0.4f);
+        SoundManager.Instance.PlayBeep(0);
         playerController.ResetPosition();
         playerController.inputActive = true;
         deadOverlay.SetActive(false);

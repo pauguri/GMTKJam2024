@@ -53,14 +53,16 @@ public class PillarGenerator : MonoBehaviour
 
     private IEnumerator GeneratePillars()
     {
+        yield return new WaitForSeconds(4f);
+
         do
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(1f);
 
             Vector2Int position = positions[0];
             positions = positions.Skip(1).ToArray();
 
-            StartCoroutine(GeneratePillar(position));
+            yield return GeneratePillar(position);
 
         } while (positions.Length > 0);
 

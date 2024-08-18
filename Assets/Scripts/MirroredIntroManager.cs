@@ -23,7 +23,7 @@ public class MirroredIntroManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && buttonEnabled && !buttonPressed)
         {
             buttonPressed = true;
-            SoundManager.Instance.PlayBeep(0, true, 0.4f);
+            SoundManager.Instance.PlayBeep(0);
             GameManager.Instance.Start3DPhase();
         }
     }

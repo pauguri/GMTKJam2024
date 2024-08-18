@@ -205,7 +205,7 @@ public class Board : MonoBehaviour
             yield return null;
         }
 
-        SoundManager.Instance.PlayBeep(0);
+        SoundManager.Instance.PlayBeep(0, false, 1, true);
         SoundManager.Instance.StopGlitchSound();
         GameManager.Instance.Start3DIntro();
     }
