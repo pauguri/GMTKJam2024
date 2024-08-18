@@ -47,6 +47,8 @@ public class ThreeDSceneLogic : MonoBehaviour
 
             // handle player winning
             playerController.inputActive = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             SoundManager.Instance.PlayBeep(4);
             GameManager.Instance.StartEnding();
         }

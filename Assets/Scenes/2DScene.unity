@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animal: {fileID: 2105812603}
-  blockedCells: 320000000f00000014000000
+  blockedCells: 0a0000000f00000014000000
   glitchEffect: {fileID: 963194232}
 --- !u!1001 &400604730
 PrefabInstance:

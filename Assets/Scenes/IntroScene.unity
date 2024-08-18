@@ -705,7 +705,6 @@ GameObject:
   - component: {fileID: 1361725451}
   - component: {fileID: 1361725450}
   - component: {fileID: 1361725453}
-  - component: {fileID: 1361725449}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -713,31 +712,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!169 &1361725449
-AudioLowPassFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1361725447}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_LowpassResonanceQ: 1
-  lowpassLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.038199183
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!82 &1361725450
 AudioSource:
   m_ObjectHideFlags: 0
@@ -748,7 +722,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 3fecf6d7917a2ca4ca0891bbfbbc664b, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 02197b1b2ffcd7d4c9e4956c3096178e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 2ffbe7188aa5ece4a94ff27ab2c3fe6d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
   m_Pitch: 1
@@ -850,7 +824,7 @@ MonoBehaviour:
   beeps:
   - {fileID: 8300000, guid: 4562ba363b2b7bf42b432f3a624e729e, type: 3}
   - {fileID: 8300000, guid: fc538eeb15f681e41b485a47e78e105e, type: 3}
-  - {fileID: 8300000, guid: 82707d16949379d47943e75266706d9d, type: 3}
+  - {fileID: 8300000, guid: 6db05f5d0be4b2b41893364c6264723e, type: 3}
   - {fileID: 8300000, guid: 7358e604e6f2bd64781342779aee5fa3, type: 3}
   - {fileID: 8300000, guid: 1be25a5793bace94fa887e4a24159b8f, type: 3}
   - {fileID: 8300000, guid: 6a12a844758757a4baedc9fb4586abd9, type: 3}
@@ -897,7 +871,7 @@ AudioSource:
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
-  BypassEffects: 1
+  BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 1
   rolloffCustomCurve:

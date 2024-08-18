@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="BeepThump_data" version="1.3.0" audacityversion="2.4.2" sel0="0.0000000000" sel1="0.0000000000" vpos="0" h="0.0000000000" zoom="295.8566196989" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="BeepUltratomb" isSelected="0" height="150" minimized="0" channel="0" linked="1" mute="0" solo="0" rate="44100" gain="0.794328" pan="0.0" colorindex="0">
+		<waveclip offset="0.06759637" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="8367">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808d42.au" len="8367" min="-0.390567" max="0.352588" rms="0.166961"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="BeepUltratomb" isSelected="0" height="150" minimized="0" channel="1" linked="0" mute="0" solo="0" rate="44100" gain="0.794328" pan="0.0" colorindex="0">
+		<waveclip offset="0.06759637" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="8367">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808822.au" len="8367" min="-0.186754" max="0.123094" rms="0.066881"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="massive-thump-116359" isSelected="1" height="150" minimized="0" channel="2" linked="0" mute="0" solo="0" rate="44100" gain="1.258925" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="124837">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808760.au" len="124837" min="-0.489752" max="0.482999" rms="0.065963"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

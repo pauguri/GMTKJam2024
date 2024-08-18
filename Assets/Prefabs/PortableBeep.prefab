@@ -49,7 +49,7 @@ MonoBehaviour:
   beeps:
   - {fileID: 8300000, guid: 4562ba363b2b7bf42b432f3a624e729e, type: 3}
   - {fileID: 8300000, guid: fc538eeb15f681e41b485a47e78e105e, type: 3}
-  - {fileID: 8300000, guid: 82707d16949379d47943e75266706d9d, type: 3}
+  - {fileID: 8300000, guid: 6db05f5d0be4b2b41893364c6264723e, type: 3}
   - {fileID: 8300000, guid: 7358e604e6f2bd64781342779aee5fa3, type: 3}
   - {fileID: 8300000, guid: 1be25a5793bace94fa887e4a24159b8f, type: 3}
   - {fileID: 8300000, guid: 6a12a844758757a4baedc9fb4586abd9, type: 3}

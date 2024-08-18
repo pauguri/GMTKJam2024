@@ -1,0 +1,34 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="ComputerHumLowPass_data" version="1.3.0" audacityversion="2.4.2" sel0="22.0666439909" sel1="33.9689342404" vpos="0" h="0.0000000000" zoom="18.9879303931" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="ComputerHum" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="0" solo="0" rate="44100" gain="1.412538" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="524891">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808d0f.au" len="145561" min="-0.157238" max="0.150519" rms="0.043369"/>
+				</waveblock>
+				<waveblock start="145561">
+					<simpleblockfile filename="e0808f58.au" len="145561" min="-0.163506" max="0.157597" rms="0.041963"/>
+				</waveblock>
+				<waveblock start="291122">
+					<simpleblockfile filename="e0808f1a.au" len="233769" min="-0.184426" max="0.196018" rms="0.043039"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="ComputerHum" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="0" solo="0" rate="44100" gain="1.412538" pan="0.0" colorindex="0">
+		<waveclip offset="10.92798186" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="491215">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808101.au" len="258049" min="-0.148262" max="0.140864" rms="0.037179"/>
+				</waveblock>
+				<waveblock start="258049">
+					<simpleblockfile filename="e0808be4.au" len="233166" min="-0.168919" max="0.159795" rms="0.041496"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
