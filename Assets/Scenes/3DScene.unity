@@ -472,6 +472,62 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2929913126193309602, guid: 5016381089ceac749b32727a311f5005, type: 3}
   m_PrefabInstance: {fileID: 595966070}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &611619372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 611619374}
+  - component: {fileID: 611619373}
+  m_Layer: 0
+  m_Name: Reverb
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!167 &611619373
+AudioReverbZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611619372}
+  m_Enabled: 1
+  m_MinDistance: 1000
+  m_MaxDistance: 2000
+  m_ReverbPreset: 25
+  m_Room: -1000
+  m_RoomHF: -400
+  m_DecayTime: 17.23
+  m_DecayHFRatio: 0.56
+  m_Reflections: -1713
+  m_ReflectionsDelay: 0.02
+  m_Reverb: -613
+  m_ReverbDelay: 0.03
+  m_HFReference: 5000
+  m_Diffusion: 100
+  m_Density: 100
+  m_LFReference: 250
+  m_RoomLF: 0
+--- !u!4 &611619374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611619372}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &649644773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,7 +1742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 963194227}
   mouseSensitivity: 2
-  movementSpeed: 50
+  movementSpeed: 40
 --- !u!143 &1949758635
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2046,3 +2102,4 @@ SceneRoots:
   - {fileID: 243745246}
   - {fileID: 1949758639}
   - {fileID: 863904022}
+  - {fileID: 611619374}

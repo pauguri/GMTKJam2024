@@ -11,6 +11,11 @@ public class Board : MonoBehaviour
     [NonSerialized] public bool enableInput = true;
 
     [SerializeField] private Animal animal;
+    [SerializeField] private int[] blockedCells = new int[] { 10, 15, 20 };
+    private int round = 0;
+
+    [Space]
+    [SerializeField] private ShaderEffect_CorruptedVram glitchEffect;
 
     void Start()
     {
@@ -40,7 +45,9 @@ public class Board : MonoBehaviour
         cells[new Vector2Int(0, 0)].occupied = true;
 
         // select random cells to block
-        for (int i = 0; i < 15; i++)
+        int blockedCountIndex = Mathf.Min(round, blockedCells.Length - 1);
+
+        for (int i = 0; i < blockedCells[blockedCountIndex]; i++)
         {
             Cell cell;
             do
@@ -120,10 +127,12 @@ public class Board : MonoBehaviour
                 cell.SetBlocked(false, false);
                 cell.occupied = false;
             }
+            round++;
             PrepareBoard();
             StartCoroutine(AnimateInBoard(1f, () => enableInput = true));
         }));
     }
+
 
     private IEnumerator AnimateInBoard(float delay = 0f, Action callback = null)
     {
@@ -153,6 +162,7 @@ public class Board : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
+        SoundManager.Instance.PlayLoseSound();
         animal.gameObject.SetActive(false);
         foreach (CanvasGroup row in GetComponentsInChildren<CanvasGroup>())
         {
@@ -162,6 +172,38 @@ public class Board : MonoBehaviour
         }
 
         callback?.Invoke();
+    }
+    public void HandleWin()
+    {
+        enableInput = false;
+
+        StartCoroutine(GlitchOutBoard(1f));
+    }
+
+    private IEnumerator GlitchOutBoard(float delay = 0f)
+    {
+        yield return new WaitForSeconds(delay);
+
+        SoundManager.Instance.PlayBeep(4);
+        SoundManager.Instance.PlayGlitchSound();
+
+        yield return new WaitForSeconds(1f);
+
+        glitchEffect.enabled = true;
+
+        float timeElapsed = 0f;
+        glitchEffect.shift = 0;
+
+        while (glitchEffect.shift < 5)
+        {
+            glitchEffect.shift = Mathf.Lerp(0, 5, timeElapsed / 2f);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        SoundManager.Instance.PlayBeep(0);
+        SoundManager.Instance.StopGlitchSound();
+        GameManager.Instance.Start3DIntro();
     }
 
     public Cell[] GetNeighbors(Cell cell)

@@ -1,11 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : PortableBeep
 {
     public static SoundManager Instance;
 
-    [SerializeField] private AudioSource beepSource;
-    [SerializeField] private AudioClip[] beeps;
+    [SerializeField] private AudioReverbFilter reverbFilter;
+    [SerializeField] private AudioSource glitchSource;
+    public GameObject portableBeepPrefab;
 
     private void Awake()
     {
@@ -20,10 +22,45 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayBeep(int clip, bool forcePitch = false, float pitch = 1f)
+    public void PlayLoseSound()
     {
-        beepSource.clip = beeps[clip];
-        beepSource.pitch = forcePitch ? pitch : 1;
-        beepSource.Play();
+        StartCoroutine(LoseSound());
     }
+
+    private IEnumerator LoseSound()
+    {
+        PlayBeep(2);
+        yield return new WaitForSeconds(0.2f);
+        PlayBeep(2, true, 0.8f);
+    }
+
+    public void PlayGlitchSound()
+    {
+        StartCoroutine(GlitchSound());
+    }
+
+    private IEnumerator GlitchSound()
+    {
+        float timeElapsed = 0f;
+        glitchSource.volume = 0;
+        glitchSource.Play();
+
+        while (glitchSource.volume < 1)
+        {
+            glitchSource.volume = Mathf.Lerp(0, 1, timeElapsed / 2f);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+    }
+
+    public void StopGlitchSound()
+    {
+        glitchSource.Stop();
+    }
+
+    //public void ToggleBeepReverb(bool value)
+    //{
+    //    reverbFilter.enabled = value;
+    //}
 }

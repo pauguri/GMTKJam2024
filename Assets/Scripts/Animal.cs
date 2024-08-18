@@ -81,13 +81,11 @@ public class Animal : HexGridObject
                         Debug.LogError("Somehow there are no unoccupied directions wat");
                     }
 
-
                     board.ResetBoard();
                 }
                 else if (currentCell.distanceToEdge <= 0)
                 {
-                    print("Trapped!");
-                    GameManager.Instance.Start3DPhase();
+                    board.HandleWin();
                 }
             }
         }
@@ -116,4 +114,9 @@ public class Animal : HexGridObject
             yield return new WaitForSeconds(0.08f);
         }
     }
+
+    //private IEnumerator GlitchAnimation()
+    //{
+
+    //}
 }

@@ -31,7 +31,7 @@ public class PillarGenerator : MonoBehaviour
         {
             foreach (Vector2Int position in blockedCells)
             {
-                StartCoroutine(GeneratePillar(position));
+                StartCoroutine(GeneratePillar(position, false));
             }
         }
 
@@ -44,7 +44,7 @@ public class PillarGenerator : MonoBehaviour
     {
         do
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(7);
 
             Vector2Int position = positions[0];
             positions = positions.Skip(1).ToArray();
@@ -54,7 +54,7 @@ public class PillarGenerator : MonoBehaviour
         } while (positions.Length > 0);
     }
 
-    private IEnumerator GeneratePillar(Vector2Int position)
+    private IEnumerator GeneratePillar(Vector2Int position, bool animate = true)
     {
         if (!groundCells.ContainsKey(position))
         {
@@ -62,9 +62,16 @@ public class PillarGenerator : MonoBehaviour
             yield break;
         }
 
-        GroundCell groundCell = groundCells[position];
-        yield return groundCell.BlockedAnimation();
+        if (animate)
+        {
+            GroundCell groundCell = groundCells[position];
+            yield return groundCell.BlockedAnimation();
+        }
 
-        Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 0, position.y * 85), Quaternion.identity);
+        GameObject pillar = Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 0, position.y * 85), Quaternion.identity);
+        if (pillar.TryGetComponent(out Pillar pillarComponent))
+        {
+            pillarComponent.Init(animate);
+        }
     }
 }

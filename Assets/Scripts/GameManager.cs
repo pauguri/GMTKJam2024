@@ -30,6 +30,12 @@ public class GameManager : MonoBehaviour
         clickedCells.Clear();
     }
 
+    public void Start3DIntro()
+    {
+
+        SceneManager.LoadScene("3DIntroScene");
+    }
+
     public void Start3DPhase()
     {
         SceneManager.LoadScene("3DScene");

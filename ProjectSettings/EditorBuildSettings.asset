@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/2DScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
+    path: Assets/Scenes/3DIntroScene.unity
+    guid: e191e63bc19758b449a94bd45aa9f968
+  - enabled: 1
     path: Assets/Scenes/3DScene.unity
     guid: 8c613da66012f2744a3000b4bff96655
   m_configObjects: {}
