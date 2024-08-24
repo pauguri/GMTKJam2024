@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [NonSerialized] public List<Vector2Int> blockedCells = new List<Vector2Int>();
-    [NonSerialized] public List<Vector2Int> clickedCells = new List<Vector2Int>();
-    [NonSerialized] public List<Vector2Int> surroundedCells = new List<Vector2Int>();
+    //[NonSerialized] public List<Vector2Int> clickedCells = new List<Vector2Int>();
+    //[NonSerialized] public List<Vector2Int> surroundedCells = new List<Vector2Int>();
     [NonSerialized] public int round = 0;
 
     private void Awake()

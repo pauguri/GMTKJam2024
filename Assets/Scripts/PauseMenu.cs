@@ -21,7 +21,7 @@ public class PauseMenu : MonoBehaviour
         {
             if (isPaused)
             {
-                Application.Quit();
+                Resume();
             }
             else
             {

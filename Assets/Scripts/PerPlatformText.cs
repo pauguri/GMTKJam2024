@@ -11,7 +11,7 @@ public class PerPlatformText : MonoBehaviour
     {
 #if UNITY_STANDALONE_WIN
         GetComponent<TextMeshProUGUI>().text = desktopText;
-#elif UNITY_WEBGL
+#else
         GetComponent<TextMeshProUGUI>().text = webText;
 #endif
     }

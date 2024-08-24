@@ -1,20 +1,27 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Cell : HexGridObject, IPointerClickHandler
+public class Cell : HexGridObject
 {
-    [NonSerialized] public Board board;
-    public bool blocked { get; private set; }
+    // [NonSerialized] public Board board;
+
+    [NonSerialized] public Image image;
+    [NonSerialized] public Color normalColor;
+    public Color blockedColor = Color.red;
+    public GameObject telegraphImage;
+    [Space]
+    [SerializeField] private float telegraphDuration = 0.32f;
+    [SerializeField] private bool playTelegraphBeep = true;
+    [SerializeField] private int telegraphBeepPreset = 1;
+    [SerializeField] private float telegraphBeepPitch = 1f;
+    [SerializeField] private bool playBlockedBeep = true;
+    [SerializeField] private int blockedBeepPreset = 3;
+    [SerializeField] private float blockedBeepPitch = 1f;
+
+    [NonSerialized] public bool blocked = false;
     [NonSerialized] public bool occupied = false;
-
-    private Image image;
-    private Color normalColor;
-    [SerializeField] private Color blockedColor = Color.red;
-    [SerializeField] private GameObject telegraphImage;
-
     [NonSerialized] public int distanceToEdge = 0;
 
     public override void Awake()
@@ -25,23 +32,6 @@ public class Cell : HexGridObject, IPointerClickHandler
 
         image = GetComponent<Image>();
         normalColor = image.color;
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        //float distanceFromCenter = Vector2.Distance(eventData.position, transform.position);
-        //if (distanceFromCenter < transform.rect.width / 2)
-        //{
-        //    print("Clicked on cell " + gameObject.name);
-        //}
-
-        if (board.enableInput && !blocked && !occupied)
-        {
-            SetBlocked(true);
-
-            GameManager.Instance.clickedCells.Add(Position);
-            board.CalculatePathfinding();
-        }
     }
 
     public void SetBlocked(bool state, bool animate = true)
@@ -73,13 +63,15 @@ public class Cell : HexGridObject, IPointerClickHandler
         for (int i = 0; i < 2; i++)
         {
             telegraphImage.SetActive(true);
-            SoundManager.Instance.PlayBeep(1);
-            yield return new WaitForSeconds(0.08f);
+            if (playTelegraphBeep)
+                SoundManager.Instance.PlayBeep(telegraphBeepPreset, true, telegraphBeepPitch);
+            yield return new WaitForSeconds(telegraphDuration / 4);
             telegraphImage.SetActive(false);
-            yield return new WaitForSeconds(0.08f);
+            yield return new WaitForSeconds(telegraphDuration / 4);
         }
         image.color = blockedColor;
-        SoundManager.Instance.PlayBeep(3);
+        if (playBlockedBeep)
+            SoundManager.Instance.PlayBeep(blockedBeepPreset, true, blockedBeepPitch);
 
         //board.enableInput = true;
     }

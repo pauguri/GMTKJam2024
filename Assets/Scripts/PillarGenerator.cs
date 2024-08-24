@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 public class PillarGenerator : MonoBehaviour
@@ -22,22 +21,21 @@ public class PillarGenerator : MonoBehaviour
         {
             foreach (Vector2Int position in blockedCells)
             {
-                StartCoroutine(GeneratePillar(position, false));
+                if (ThreeDSceneLogic.Instance.cells.ContainsKey(position))
+                {
+                    ThreeDSceneLogic.Instance.cells[position].blocked = true;
+                    StartCoroutine(InstantiatePillar(position, false));
+                }
             }
         }
     }
 
-    public void BeginPillarGeneration()
+    public void GeneratePillar(Vector2Int playerPosition)
     {
-        positions = GameManager.Instance.clickedCells.ToArray();
-        // positions = new Vector2Int[] { new Vector2Int(-1, 1), new Vector2Int(1, 1), new Vector2Int(2, 1), new Vector2Int(3, 1), new Vector2Int(4, 1), new Vector2Int(5, 1), new Vector2Int(-2, 1), new Vector2Int(-3, 1), new Vector2Int(-4, 1) };
-        if (positions.Length == 0)
-        {
-            Debug.LogError("No positions to generate pillars");
-            return;
-        }
+        if (ThreeDSceneLogic.Instance == null) { return; }
+        ThreeDSceneLogic board = ThreeDSceneLogic.Instance;
 
-        StartCoroutine(GeneratePillars());
+        // minmax stuff
     }
 
     public void ResetPillars()
@@ -51,27 +49,7 @@ public class PillarGenerator : MonoBehaviour
         PrepareBoard();
     }
 
-    private IEnumerator GeneratePillars()
-    {
-        yield return new WaitForSeconds(4f);
-
-        do
-        {
-            yield return new WaitForSeconds(1f);
-
-            Vector2Int position = positions[0];
-            positions = positions.Skip(1).ToArray();
-
-            yield return GeneratePillar(position);
-
-        } while (positions.Length > 0);
-
-        yield return new WaitForSeconds(3f);
-
-        ThreeDSceneLogic.Instance.CheckPlayerTrapped();
-    }
-
-    private IEnumerator GeneratePillar(Vector2Int position, bool animate = true)
+    private IEnumerator InstantiatePillar(Vector2Int position, bool animate = true)
     {
         GameObject pillar = Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 700, position.y * 85), Quaternion.identity);
         pillar.transform.SetParent(transform);
@@ -80,9 +58,9 @@ public class PillarGenerator : MonoBehaviour
             pillarComponent.Init(animate);
         }
 
-        if (animate && ThreeDSceneLogic.Instance.groundCells.ContainsKey(position))
+        if (animate && ThreeDSceneLogic.Instance.cells.ContainsKey(position))
         {
-            GroundCell groundCell = ThreeDSceneLogic.Instance.groundCells[position];
+            Cell groundCell = ThreeDSceneLogic.Instance.cells[position];
             yield return groundCell.BlockedAnimation();
         }
 

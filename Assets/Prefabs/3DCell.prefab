@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 7377089134687041689}
   - component: {fileID: 1837854125756337185}
   - component: {fileID: 7622660659648623147}
-  - component: {fileID: 6274279430311821706}
+  - component: {fileID: 684704592616487224}
   m_Layer: 5
   m_Name: 3DCell
   m_TagString: Untagged
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6274279430311821706
+--- !u!114 &684704592616487224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -256,7 +256,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5546765281356321460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30df1de4fbb204f47b9a49a7a8a51a28, type: 3}
+  m_Script: {fileID: 11500000, guid: c943c10363e784c4d9a1cb1d17587c42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blockedColor: {r: 0.9254902, g: 0.9254902, b: 0.9254902, a: 1}
   telegraphImage: {fileID: 1037878508453576908}
+  telegraphDuration: 2
+  playTelegraphBeep: 1
+  telegraphBeepPreset: 1
+  telegraphBeepPitch: 0.2
+  playBlockedBeep: 0
+  blockedBeepPreset: 0
+  blockedBeepPitch: 0

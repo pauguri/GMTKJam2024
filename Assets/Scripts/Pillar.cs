@@ -4,6 +4,7 @@ using UnityEngine;
 public class Pillar : MonoBehaviour
 {
     [SerializeField] private GameObject crushTrigger;
+    [SerializeField] private float spawnDuration = 3.5f;
 
     public void Init(bool animate)
     {
@@ -27,8 +28,8 @@ public class Pillar : MonoBehaviour
         float timeElapsed = 0f;
         while (transform.position.y > 0)
         {
-            transform.position = new Vector3(transform.position.x, Mathf.Lerp(700, 0, timeElapsed / 3.5f), transform.position.z);
-            transform.localScale = new Vector3(1, Mathf.Lerp(0, finalScale, timeElapsed / 3.5f), 1);
+            transform.position = new Vector3(transform.position.x, Mathf.Lerp(700, 0, timeElapsed / spawnDuration), transform.position.z);
+            transform.localScale = new Vector3(1, Mathf.Lerp(0, finalScale, timeElapsed / spawnDuration), 1);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

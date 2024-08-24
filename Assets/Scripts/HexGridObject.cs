@@ -44,4 +44,19 @@ public class HexGridObject : MonoBehaviour
     {
         return AnchoredToHex(position.x, position.y);
     }
+
+    public static Vector3 HexToWorld(int x, int y)
+    {
+        Vector2 anchored = HexToAnchored(x, y);
+        return new Vector3(anchored.x, 0, anchored.y);
+    }
+    public static Vector3 HexToWorld(Vector2Int position)
+    {
+        return HexToWorld(position.x, position.y);
+    }
+
+    public static Vector2Int WorldToHex(Vector3 position)
+    {
+        return AnchoredToHex(position.x, position.z);
+    }
 }

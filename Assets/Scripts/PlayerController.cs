@@ -5,11 +5,14 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private float mouseSensitivity = 2f;
+    [SerializeField] private float changeCellDistance = 10f;
     public float movementSpeed = 5f;
-    private float verticalRotation = -70f;
+    private float verticalRotation = -90f;
     [NonSerialized] public bool inputActive = true;
     private Vector3 startPosition = Vector3.zero;
+    [NonSerialized] public Vector2Int currentHex = Vector2Int.zero;
 
+    // tutorial checks
     [NonSerialized] public bool hasLooked = false;
     [NonSerialized] public bool hasMoved = false;
 
@@ -18,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         startPosition = transform.position;
+        currentHex = HexGridObject.WorldToHex(startPosition);
     }
 
     void Start()
@@ -59,6 +63,30 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up * mouseX);
 
+        // CALCULATE CLOSEST CELL
+
+        if (Vector3.Distance(HexGridObject.HexToWorld(currentHex), transform.position) > (changeCellDistance + 50f))
+        {
+            Vector2Int closestHex = currentHex;
+            Vector3 closestWorldPos = HexGridObject.HexToWorld(currentHex);
+
+            foreach (Vector2Int neighborCell in ThreeDSceneLogic.Instance.GetNeighbors(currentHex))
+            {
+                Vector2 cellWorldPos = HexGridObject.HexToWorld(neighborCell);
+
+                if (Vector3.Distance(cellWorldPos, transform.position) < Vector3.Distance(closestWorldPos, transform.position))
+                {
+                    closestHex = neighborCell;
+                    closestWorldPos = cellWorldPos;
+                }
+            }
+            if (closestHex != currentHex)
+            {
+                currentHex = closestHex;
+                ThreeDSceneLogic.Instance.HandlePlayerChangeCell(closestHex);
+            }
+        }
+
         // FIRST TIME CHECKS
 
         if (!hasLooked)
@@ -81,12 +109,14 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void ResetPosition()
+    public void ResetPosition(float verticalRotation = -90f)
     {
         controller.enabled = false;
+
         transform.position = startPosition;
-        verticalRotation = -70f;
+        this.verticalRotation = verticalRotation;
         cam.transform.localEulerAngles = Vector3.zero;
+        currentHex = HexGridObject.WorldToHex(startPosition);
 
         controller.enabled = true;
     }

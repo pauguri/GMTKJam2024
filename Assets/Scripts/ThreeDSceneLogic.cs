@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ThreeDSceneLogic : MonoBehaviour
+public class ThreeDSceneLogic : Board
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PillarGenerator pillarGenerator;
@@ -15,8 +14,6 @@ public class ThreeDSceneLogic : MonoBehaviour
     [SerializeField] private GameObject movementHint;
     private Coroutine movementHintCoroutine;
     private bool movementHintShown = false;
-
-    public readonly Dictionary<Vector2Int, GroundCell> groundCells = new Dictionary<Vector2Int, GroundCell>();
 
     public static ThreeDSceneLogic Instance;
 
@@ -32,13 +29,9 @@ public class ThreeDSceneLogic : MonoBehaviour
         }
     }
 
-    private void Start()
+    public override void Start()
     {
-        GroundCell[] groundCellObjects = FindObjectsOfType<GroundCell>();
-        foreach (GroundCell cell in groundCellObjects)
-        {
-            groundCells.Add(new Vector2Int(cell.x, cell.y), cell);
-        }
+        base.Start();
 
         if (!movementHintShown)
         {
@@ -61,8 +54,13 @@ public class ThreeDSceneLogic : MonoBehaviour
             StopCoroutine(movementHintCoroutine);
         }
         movementHint.SetActive(false);
+    }
 
-        pillarGenerator.BeginPillarGeneration();
+    public void HandlePlayerChangeCell(Vector2Int newPosition)
+    {
+        CalculateDistancesToEdge();
+        pillarGenerator.GeneratePillar(newPosition);
+        print("player mod to " + newPosition);
     }
 
     private void Update()
@@ -137,10 +135,9 @@ public class ThreeDSceneLogic : MonoBehaviour
 
     private void HideDeathScreen()
     {
-        playerController.ResetPosition();
+        playerController.ResetPosition(-60f);
         playerController.inputActive = true;
         pauseMenu.canPause = true;
-        pillarGenerator.BeginPillarGeneration();
         isDead = false;
         deadOverlay.SetActive(false);
     }
@@ -148,25 +145,25 @@ public class ThreeDSceneLogic : MonoBehaviour
     public void CheckPlayerTrapped()
     {
         // check what cell the player is closest to
-        Vector2Int closestPosition = Vector2Int.zero;
-        Vector3 closestWorldPos = Vector3.positiveInfinity;
+        //Vector2Int closestPosition = Vector2Int.zero;
+        //Vector3 closestWorldPos = Vector3.positiveInfinity;
 
-        foreach (GroundCell cell in groundCells.Values)
-        {
-            Vector2 cellAnchoredPos = HexGridObject.HexToAnchored(cell.Position);
-            Vector3 cellWorldPos = new Vector3(cellAnchoredPos.x, 0, cellAnchoredPos.y);
+        //foreach (Cell cell in cells.Values)
+        //{
+        //    Vector2 cellAnchoredPos = HexGridObject.HexToAnchored(cell.Position);
+        //    Vector3 cellWorldPos = new Vector3(cellAnchoredPos.x, 0, cellAnchoredPos.y);
 
-            if (Vector3.Distance(cellWorldPos, playerController.transform.position) < Vector3.Distance(closestWorldPos, playerController.transform.position))
-            {
-                closestPosition = cell.Position;
-                closestWorldPos = cellWorldPos;
-            }
-        }
+        //    if (Vector3.Distance(cellWorldPos, playerController.transform.position) < Vector3.Distance(closestWorldPos, playerController.transform.position))
+        //    {
+        //        closestPosition = cell.Position;
+        //        closestWorldPos = cellWorldPos;
+        //    }
+        //}
 
         // check if the closest cell is surrounded
-        if (GameManager.Instance.surroundedCells.Contains(closestPosition))
-        {
-            HandleGetSurrounded();
-        }
+        //if (GameManager.Instance.surroundedCells.Contains(closestPosition))
+        //{
+        //    HandleGetSurrounded();
+        //}
     }
 }

@@ -7,8 +7,11 @@ public class Animal : HexGridObject
 {
     private Coroutine moveCoroutine;
 
-    public void CalculateNextMove(Board board)
+    public void CalculateNextMove()
     {
+        if (TwoDSceneLogic.Instance == null) { return; }
+        TwoDSceneLogic board = TwoDSceneLogic.Instance;
+
         if (board.cells.ContainsKey(Position))
         {
             Cell currentCell = board.cells[Position];
@@ -61,7 +64,7 @@ public class Animal : HexGridObject
                 {
                     // find neighbor that doesn't exist in the board
                     List<Vector2Int> unoccupiedDirections = new List<Vector2Int>();
-                    foreach (Vector2Int direction in Board.GetDirections(currentCell))
+                    foreach (Vector2Int direction in Board.GetDirections(currentCell.Position))
                     {
                         if (!board.cells.ContainsKey(currentCell.Position + direction))
                         {
