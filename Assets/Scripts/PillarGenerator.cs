@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PillarGenerator : MonoBehaviour
@@ -14,6 +15,8 @@ public class PillarGenerator : MonoBehaviour
 
     public void PrepareBoard()
     {
+        if (ThreeDSceneLogic.Instance == null) { return; }
+
         // generate initially blocked pillars
         Vector2Int[] blockedCells = GameManager.Instance.blockedCells.ToArray();
         // Vector2Int[] blockedCells = new Vector2Int[] { new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(-2, 0), new Vector2Int(-3, 0), new Vector2Int(-4, 0) };
@@ -28,6 +31,8 @@ public class PillarGenerator : MonoBehaviour
                 }
             }
         }
+
+        ThreeDSceneLogic.Instance.CalculateDistancesToEdge();
     }
 
     public void GeneratePillar(Vector2Int playerPosition)
@@ -35,13 +40,37 @@ public class PillarGenerator : MonoBehaviour
         if (ThreeDSceneLogic.Instance == null) { return; }
         ThreeDSceneLogic board = ThreeDSceneLogic.Instance;
 
-        // check if player is trapped (distanceToEdge of current cell is 0)
         if (board.cells.ContainsKey(playerPosition))
         {
-            StartCoroutine(InstantiatePillar(playerPosition));
-        }
+            Cell playerCell = board.cells[playerPosition];
 
-        // minmax stuff
+            // calculate fastest path to edge
+            Cell currentCell = playerCell;
+            List<Cell> pathCells = new List<Cell>();
+
+            while (currentCell.distanceToEdge > 1)
+            {
+                Cell nextCell = board.CalculateNextMove(currentCell);
+                if (nextCell.Position == currentCell.Position) { break; }
+
+                pathCells.Add(nextCell);
+                currentCell = nextCell;
+            }
+
+            if (pathCells.Count > 0)
+            {
+                Cell chosenCell = pathCells[Random.Range(0, pathCells.Count)];
+                chosenCell.blocked = true;
+                StartCoroutine(InstantiatePillar(chosenCell.Position));
+
+                // recalculate distances to edge (to see if player has been trapped)
+                board.CalculateDistancesToEdge();
+                if (playerCell.distanceToEdge <= 0)
+                {
+                    board.HandleGetSurrounded();
+                }
+            }
+        }
     }
 
     public void ResetPillars()

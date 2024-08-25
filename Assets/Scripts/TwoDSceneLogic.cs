@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -75,8 +76,49 @@ public class TwoDSceneLogic : Board
 
     public void HandleAnimalTurn()
     {
-        CalculateDistancesToEdge();
-        animal.CalculateNextMove();
+        if (cells.ContainsKey(animal.Position))
+        {
+            CalculateDistancesToEdge();
+
+            Cell currentCell = cells[animal.Position];
+            // animal is on the edge and is about to leave
+            if (currentCell.distanceToEdge == 1)
+            {
+                // find neighbor that doesn't exist in the board
+                List<Vector2Int> unoccupiedDirections = new List<Vector2Int>();
+                foreach (Vector2Int direction in GetDirections(currentCell.Position))
+                {
+                    if (!cells.ContainsKey(currentCell.Position + direction))
+                    {
+                        unoccupiedDirections.Add(direction);
+                    }
+                }
+
+                if (unoccupiedDirections.Count > 0)
+                {
+                    Vector2Int direction = unoccupiedDirections[Random.Range(0, unoccupiedDirections.Count)];
+                    currentCell.occupied = false;
+
+                    animal.MoveTo(currentCell.Position + direction);
+                }
+                else
+                {
+                    Debug.LogError("Somehow there are no unoccupied directions wat");
+                }
+
+                ResetBoard();
+            }
+            // animal is trapped
+            else if (currentCell.distanceToEdge <= 0)
+            {
+                HandleWin();
+            }
+            else
+            {
+                Vector2Int nextPosition = CalculateNextMove(currentCell).Position;
+                animal.MoveTo(nextPosition);
+            }
+        }
     }
 
     public void ResetBoard()

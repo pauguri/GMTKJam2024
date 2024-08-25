@@ -64,7 +64,6 @@ public class ThreeDSceneLogic : Board
             return;
         }
 
-        CalculateDistancesToEdge();
         pillarGenerator.GeneratePillar(newPosition);
         print("player moved to " + newPosition);
     }

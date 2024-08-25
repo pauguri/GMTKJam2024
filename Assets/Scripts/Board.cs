@@ -58,6 +58,59 @@ public class Board : MonoBehaviour
         } while (changed);
     }
 
+    public Cell CalculateNextMove(Cell currentCell)
+    {
+        if (currentCell.distanceToEdge <= 1) { return currentCell; }
+
+        // find the cell with the lowest distance to the edge
+        int lowestDistance = int.MaxValue;
+        List<Cell> bestCells = new List<Cell>();
+
+        foreach (Cell neighbor in GetNeighbors(currentCell))
+        {
+            if (neighbor.distanceToEdge <= 0 || neighbor.blocked)
+            {
+                continue;
+            }
+
+            if (neighbor.distanceToEdge < lowestDistance)
+            {
+                bestCells.Clear();
+                lowestDistance = neighbor.distanceToEdge;
+                bestCells.Add(neighbor);
+            }
+            else if (neighbor.distanceToEdge == lowestDistance)
+            {
+                bestCells.Add(neighbor);
+            }
+        }
+
+        if (bestCells.Count == 1)
+        {
+            currentCell.occupied = false;
+            bestCells[0].occupied = true;
+
+            return bestCells[0];
+        }
+        else if (bestCells.Count > 1)
+        {
+            // if there are multiple cells with the same score, pick one at random
+            int index = Random.Range(0, bestCells.Count);
+
+            currentCell.occupied = false;
+            bestCells[index].occupied = true;
+
+            return bestCells[index];
+        }
+
+        return currentCell;
+    }
+    public Vector2Int CalculateNextMove(Vector2Int position)
+    {
+        if (!cells.ContainsKey(position)) { return position; }
+        return CalculateNextMove(cells[position]).Position;
+    }
+
     public Cell[] GetNeighbors(Cell cell)
     {
         List<Cell> neighbors = new List<Cell>();
