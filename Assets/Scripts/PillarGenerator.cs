@@ -35,6 +35,12 @@ public class PillarGenerator : MonoBehaviour
         if (ThreeDSceneLogic.Instance == null) { return; }
         ThreeDSceneLogic board = ThreeDSceneLogic.Instance;
 
+        // check if player is trapped (distanceToEdge of current cell is 0)
+        if (board.cells.ContainsKey(playerPosition))
+        {
+            StartCoroutine(InstantiatePillar(playerPosition));
+        }
+
         // minmax stuff
     }
 

@@ -36,7 +36,7 @@ public class HexGridObject : MonoBehaviour
 
     public static Vector2Int AnchoredToHex(float x, float y)
     {
-        int hexX = Mathf.CeilToInt(x / 100);
+        int hexX = Mathf.CeilToInt((x + (y % 2 == 0 ? -25 : 25)) / 100);
         int hexY = Mathf.CeilToInt(y / 85);
         return new Vector2Int(hexX, hexY);
     }

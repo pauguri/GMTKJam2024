@@ -58,9 +58,15 @@ public class ThreeDSceneLogic : Board
 
     public void HandlePlayerChangeCell(Vector2Int newPosition)
     {
+        if (Mathf.Abs(newPosition.x) > 5 || Mathf.Abs(newPosition.y) > 5)
+        {
+            HandleWin();
+            return;
+        }
+
         CalculateDistancesToEdge();
         pillarGenerator.GeneratePillar(newPosition);
-        print("player mod to " + newPosition);
+        print("player moved to " + newPosition);
     }
 
     private void Update()
@@ -83,21 +89,21 @@ public class ThreeDSceneLogic : Board
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            print("Player entered trigger " + name);
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        print("Player entered trigger " + name);
 
-            // handle player winning
-            playerController.inputActive = false;
-            pauseMenu.canPause = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            SoundManager.Instance.PlayBeep(4);
-            GameManager.Instance.StartEnding();
-        }
-    }
+    //        // handle player winning
+    //        playerController.inputActive = false;
+    //        pauseMenu.canPause = false;
+    //        Cursor.lockState = CursorLockMode.None;
+    //        Cursor.visible = true;
+    //        SoundManager.Instance.PlayBeep(4);
+    //        GameManager.Instance.StartEnding();
+    //    }
+    //}
 
     public void HandleGetCrushed()
     {
@@ -142,28 +148,13 @@ public class ThreeDSceneLogic : Board
         deadOverlay.SetActive(false);
     }
 
-    public void CheckPlayerTrapped()
+    public void HandleWin()
     {
-        // check what cell the player is closest to
-        //Vector2Int closestPosition = Vector2Int.zero;
-        //Vector3 closestWorldPos = Vector3.positiveInfinity;
-
-        //foreach (Cell cell in cells.Values)
-        //{
-        //    Vector2 cellAnchoredPos = HexGridObject.HexToAnchored(cell.Position);
-        //    Vector3 cellWorldPos = new Vector3(cellAnchoredPos.x, 0, cellAnchoredPos.y);
-
-        //    if (Vector3.Distance(cellWorldPos, playerController.transform.position) < Vector3.Distance(closestWorldPos, playerController.transform.position))
-        //    {
-        //        closestPosition = cell.Position;
-        //        closestWorldPos = cellWorldPos;
-        //    }
-        //}
-
-        // check if the closest cell is surrounded
-        //if (GameManager.Instance.surroundedCells.Contains(closestPosition))
-        //{
-        //    HandleGetSurrounded();
-        //}
+        playerController.inputActive = false;
+        pauseMenu.canPause = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SoundManager.Instance.PlayBeep(4);
+        GameManager.Instance.StartEnding();
     }
 }

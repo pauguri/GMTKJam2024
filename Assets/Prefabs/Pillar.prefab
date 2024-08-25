@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crushTrigger: {fileID: 8859860002813809863}
+  spawnDuration: 2
 --- !u!136 &2884252083794448292
 CapsuleCollider:
   m_ObjectHideFlags: 0

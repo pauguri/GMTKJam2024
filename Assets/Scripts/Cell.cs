@@ -28,7 +28,8 @@ public class Cell : HexGridObject
     {
         base.Awake();
 
-        SetPosition(AnchoredToHex(transform.anchoredPosition.x, transform.parent.GetComponent<RectTransform>().anchoredPosition.y));
+        RectTransform parentRow = transform.parent.GetComponent<RectTransform>();
+        SetPosition(AnchoredToHex(transform.anchoredPosition.x + parentRow.anchoredPosition.x, parentRow.anchoredPosition.y));
 
         image = GetComponent<Image>();
         normalColor = image.color;

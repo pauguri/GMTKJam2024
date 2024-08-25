@@ -65,16 +65,16 @@ public class PlayerController : MonoBehaviour
 
         // CALCULATE CLOSEST CELL
 
-        if (Vector3.Distance(HexGridObject.HexToWorld(currentHex), transform.position) > (changeCellDistance + 50f))
+        Vector3 flatPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        if (Vector3.Distance(HexGridObject.HexToWorld(currentHex), flatPosition) > (changeCellDistance + 50f))
         {
             Vector2Int closestHex = currentHex;
             Vector3 closestWorldPos = HexGridObject.HexToWorld(currentHex);
 
             foreach (Vector2Int neighborCell in ThreeDSceneLogic.Instance.GetNeighbors(currentHex))
             {
-                Vector2 cellWorldPos = HexGridObject.HexToWorld(neighborCell);
-
-                if (Vector3.Distance(cellWorldPos, transform.position) < Vector3.Distance(closestWorldPos, transform.position))
+                Vector3 cellWorldPos = HexGridObject.HexToWorld(neighborCell);
+                if (Vector3.Distance(cellWorldPos, flatPosition) < Vector3.Distance(closestWorldPos, flatPosition))
                 {
                     closestHex = neighborCell;
                     closestWorldPos = cellWorldPos;
