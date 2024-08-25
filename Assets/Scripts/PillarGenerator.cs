@@ -1,17 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PillarGenerator : MonoBehaviour
 {
-    private Vector2Int[] positions;
     [SerializeField] private GameObject pillarPrefab;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        PrepareBoard();
-    }
 
     public void PrepareBoard()
     {
@@ -22,8 +17,10 @@ public class PillarGenerator : MonoBehaviour
         // Vector2Int[] blockedCells = new Vector2Int[] { new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(-2, 0), new Vector2Int(-3, 0), new Vector2Int(-4, 0) };
         if (blockedCells.Length > 0)
         {
+            print(blockedCells.Length);
             foreach (Vector2Int position in blockedCells)
             {
+                print(position.ToString());
                 if (ThreeDSceneLogic.Instance.cells.ContainsKey(position))
                 {
                     ThreeDSceneLogic.Instance.cells[position].blocked = true;
@@ -61,14 +58,17 @@ public class PillarGenerator : MonoBehaviour
             {
                 Cell chosenCell = pathCells[Random.Range(0, pathCells.Count)];
                 chosenCell.blocked = true;
-                StartCoroutine(InstantiatePillar(chosenCell.Position));
 
-                // recalculate distances to edge (to see if player has been trapped)
+                // recalculate distances to edge
                 board.CalculateDistancesToEdge();
-                if (playerCell.distanceToEdge <= 0)
+
+                StartCoroutine(InstantiatePillar(chosenCell.Position, true, () =>
                 {
-                    board.HandleGetSurrounded();
-                }
+                    if (playerCell.distanceToEdge <= 0)
+                    {
+                        board.HandleGetSurrounded();
+                    }
+                }));
             }
         }
     }
@@ -84,8 +84,9 @@ public class PillarGenerator : MonoBehaviour
         PrepareBoard();
     }
 
-    private IEnumerator InstantiatePillar(Vector2Int position, bool animate = true)
+    private IEnumerator InstantiatePillar(Vector2Int position, bool animate = true, Action onComplete = null)
     {
+        print("Generating pillar");
         GameObject pillar = Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 700, position.y * 85), Quaternion.identity);
         pillar.transform.SetParent(transform);
         if (pillar.TryGetComponent(out Pillar pillarComponent))
@@ -99,5 +100,8 @@ public class PillarGenerator : MonoBehaviour
             yield return groundCell.BlockedAnimation();
         }
 
+        yield return new WaitForSeconds(3f);
+
+        onComplete?.Invoke();
     }
 }

@@ -32,6 +32,7 @@ public class ThreeDSceneLogic : Board
     public override void Start()
     {
         base.Start();
+        pillarGenerator.PrepareBoard();
 
         if (!movementHintShown)
         {
