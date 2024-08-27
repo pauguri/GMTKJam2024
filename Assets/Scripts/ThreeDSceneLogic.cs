@@ -118,6 +118,12 @@ public class ThreeDSceneLogic : Board
         ShowDeathScreen();
     }
 
+    public bool IsPlayerSurrounded()
+    {
+        if (!cells.ContainsKey(playerController.currentHex)) { return false; }
+        return cells[playerController.currentHex].distanceToEdge <= 0;
+    }
+
     public void HandleGetSurrounded()
     {
         if (isDead)
@@ -136,6 +142,11 @@ public class ThreeDSceneLogic : Board
         playerController.inputActive = false;
         pauseMenu.canPause = false;
         deadOverlay.SetActive(true);
+
+        foreach (Cell cell in cells.Values)
+        {
+            cell.SetBlocked(false, false);
+        }
         pillarGenerator.ResetPillars();
     }
 

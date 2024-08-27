@@ -24,6 +24,8 @@ public class Cell : HexGridObject
     [NonSerialized] public bool occupied = false;
     [NonSerialized] public int distanceToEdge = 0;
 
+    //public TextMeshProUGUI debugText;
+
     public override void Awake()
     {
         base.Awake();
@@ -33,6 +35,11 @@ public class Cell : HexGridObject
 
         image = GetComponent<Image>();
         normalColor = image.color;
+
+        //if (debugText != null)
+        //{
+        //    debugText.text = x + ", " + y;
+        //}
     }
 
     public void SetBlocked(bool state, bool animate = true)

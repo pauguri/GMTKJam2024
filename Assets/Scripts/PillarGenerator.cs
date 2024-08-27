@@ -7,24 +7,27 @@ using Random = UnityEngine.Random;
 public class PillarGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject pillarPrefab;
+    private bool playerIsSurrounded = false;
 
     public void PrepareBoard()
     {
         if (ThreeDSceneLogic.Instance == null) { return; }
 
         // generate initially blocked pillars
-        Vector2Int[] blockedCells = GameManager.Instance.blockedCells.ToArray();
-        // Vector2Int[] blockedCells = new Vector2Int[] { new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(-2, 0), new Vector2Int(-3, 0), new Vector2Int(-4, 0) };
-        if (blockedCells.Length > 0)
+        if (GameManager.Instance != null && GameManager.Instance.blockedCells.Count > 0)
         {
-            print(blockedCells.Length);
-            foreach (Vector2Int position in blockedCells)
+            Vector2Int[] blockedCells = GameManager.Instance.blockedCells.ToArray();
+            // Vector2Int[] blockedCells = new Vector2Int[] { new Vector2Int(-1, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(3, 0), new Vector2Int(4, 0), new Vector2Int(5, 0), new Vector2Int(-2, 0), new Vector2Int(-3, 0), new Vector2Int(-4, 0) };
+            if (blockedCells.Length > 0)
             {
-                print(position.ToString());
-                if (ThreeDSceneLogic.Instance.cells.ContainsKey(position))
+                foreach (Vector2Int position in blockedCells)
                 {
-                    ThreeDSceneLogic.Instance.cells[position].blocked = true;
-                    StartCoroutine(InstantiatePillar(position, false));
+                    if (ThreeDSceneLogic.Instance.cells.ContainsKey(position))
+                    {
+                        Cell cell = ThreeDSceneLogic.Instance.cells[position];
+                        cell.blocked = true;
+                        StartCoroutine(InstantiatePillar(cell, false, false));
+                    }
                 }
             }
         }
@@ -34,7 +37,7 @@ public class PillarGenerator : MonoBehaviour
 
     public void GeneratePillar(Vector2Int playerPosition)
     {
-        if (ThreeDSceneLogic.Instance == null) { return; }
+        if (ThreeDSceneLogic.Instance == null || playerIsSurrounded) { return; }
         ThreeDSceneLogic board = ThreeDSceneLogic.Instance;
 
         if (board.cells.ContainsKey(playerPosition))
@@ -50,6 +53,7 @@ public class PillarGenerator : MonoBehaviour
                 Cell nextCell = board.CalculateNextMove(currentCell);
                 if (nextCell.Position == currentCell.Position) { break; }
 
+                print(nextCell.Position.ToString() + " -> " + nextCell.distanceToEdge);
                 pathCells.Add(nextCell);
                 currentCell = nextCell;
             }
@@ -58,18 +62,25 @@ public class PillarGenerator : MonoBehaviour
             {
                 Cell chosenCell = pathCells[Random.Range(0, pathCells.Count)];
                 chosenCell.blocked = true;
-
-                // recalculate distances to edge
-                board.CalculateDistancesToEdge();
-
-                StartCoroutine(InstantiatePillar(chosenCell.Position, true, () =>
-                {
-                    if (playerCell.distanceToEdge <= 0)
-                    {
-                        board.HandleGetSurrounded();
-                    }
-                }));
+                StartCoroutine(InstantiatePillar(chosenCell));
+                print("-> " + chosenCell.Position.ToString());
             }
+            else
+            {
+                // if no path is found, player is either surrounded or on the edge
+                // choose a random neighbor to block
+                Cell[] neighbors = board.GetNeighbors(playerCell);
+                neighbors = Array.FindAll(neighbors, n => !n.blocked);
+                if (neighbors.Length > 0)
+                {
+                    Cell chosenCell = neighbors[Random.Range(0, neighbors.Length)];
+                    chosenCell.blocked = true;
+                    StartCoroutine(InstantiatePillar(chosenCell));
+                    print("-> " + chosenCell.Position.ToString());
+                }
+            }
+
+            board.CalculateDistancesToEdge();
         }
     }
 
@@ -80,28 +91,30 @@ public class PillarGenerator : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        playerIsSurrounded = false;
 
         PrepareBoard();
     }
 
-    private IEnumerator InstantiatePillar(Vector2Int position, bool animate = true, Action onComplete = null)
+    private IEnumerator InstantiatePillar(Cell cell, bool animate = true, bool checkSurrounded = true)
     {
-        print("Generating pillar");
-        GameObject pillar = Instantiate(pillarPrefab, new Vector3(position.x * 100 + (position.y % 2 == 0 ? 25 : -25), 700, position.y * 85), Quaternion.identity);
+        GameObject pillar = Instantiate(pillarPrefab, new Vector3(cell.x * 100 + (cell.y % 2 == 0 ? 25 : -25), 700, cell.y * 85), Quaternion.identity);
         pillar.transform.SetParent(transform);
         if (pillar.TryGetComponent(out Pillar pillarComponent))
         {
             pillarComponent.Init(animate);
         }
 
-        if (animate && ThreeDSceneLogic.Instance.cells.ContainsKey(position))
+        if (animate)
         {
-            Cell groundCell = ThreeDSceneLogic.Instance.cells[position];
-            yield return groundCell.BlockedAnimation();
+            yield return cell.BlockedAnimation();
         }
 
-        yield return new WaitForSeconds(3f);
-
-        onComplete?.Invoke();
+        if (checkSurrounded && ThreeDSceneLogic.Instance.IsPlayerSurrounded())
+        {
+            playerIsSurrounded = true;
+            yield return new WaitForSeconds(3f);
+            ThreeDSceneLogic.Instance.HandleGetSurrounded();
+        }
     }
 }

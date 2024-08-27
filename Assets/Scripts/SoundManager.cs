@@ -34,20 +34,20 @@ public class SoundManager : PortableBeep
         PlayBeep(2, true, 0.8f);
     }
 
-    public void PlayGlitchSound()
+    public void PlayGlitchSound(float fadeDuration)
     {
-        StartCoroutine(GlitchSound());
+        StartCoroutine(GlitchSound(fadeDuration));
     }
 
-    private IEnumerator GlitchSound()
+    private IEnumerator GlitchSound(float fadeDuration)
     {
         float timeElapsed = 0f;
-        glitchSource.volume = 0;
+        glitchSource.volume = 0.2f;
         glitchSource.Play();
 
         while (glitchSource.volume < 1)
         {
-            glitchSource.volume = Mathf.Lerp(0, 1, timeElapsed / 2f);
+            glitchSource.volume = Mathf.Lerp(0.2f, 1, timeElapsed / fadeDuration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

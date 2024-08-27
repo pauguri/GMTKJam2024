@@ -199,9 +199,7 @@ public class TwoDSceneLogic : Board
 
         yield return new WaitForSeconds(2f);
 
-        SoundManager.Instance.PlayGlitchSound();
-
-        yield return new WaitForSeconds(1f);
+        SoundManager.Instance.PlayGlitchSound(2f);
 
         glitchEffect.enabled = true;
 
@@ -210,7 +208,7 @@ public class TwoDSceneLogic : Board
 
         while (glitchEffect.shift < 5)
         {
-            glitchEffect.shift = Mathf.Lerp(0, 5, timeElapsed / 2f);
+            glitchEffect.shift = Mathf.Lerp(0, 5, timeElapsed / 3f);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

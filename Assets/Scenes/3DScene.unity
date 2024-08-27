@@ -958,13 +958,13 @@ AudioReverbZone:
   m_MaxDistance: 2000
   m_ReverbPreset: 27
   m_Room: -1000
-  m_RoomHF: -400
-  m_DecayTime: 5
-  m_DecayHFRatio: 0.56
-  m_Reflections: -1713
-  m_ReflectionsDelay: 0.02
-  m_Reverb: -134
-  m_ReverbDelay: 0.03
+  m_RoomHF: -1501
+  m_DecayTime: 2.4
+  m_DecayHFRatio: 1.5
+  m_Reflections: -1363
+  m_ReflectionsDelay: 0.008
+  m_Reverb: -1153
+  m_ReverbDelay: 0.012
   m_HFReference: 5000
   m_Diffusion: 100
   m_Density: 100
@@ -3055,7 +3055,7 @@ MonoBehaviour:
   cam: {fileID: 963194227}
   mouseSensitivity: 2
   changeCellDistance: 10
-  movementSpeed: 40
+  movementSpeed: 30
 --- !u!143 &1949758635
 CharacterController:
   m_ObjectHideFlags: 0
